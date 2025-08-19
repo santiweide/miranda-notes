@@ -24,7 +24,20 @@ or from official release: [downloads](https://www.cs.kent.ac.uk/people/staff/dat
 
 #### 递归题目
 
-[斐波那契数列](scripts/fibs.m)
+[斐波那契数列-simple](scripts/fibs.m)
+
+[斐波那契数列-prime](scripts/fibs_prime.m)
+
+[斐波那契数列-optimized](scripts/fibs_streaming.m)
 
 [汉诺塔](scripts/hanoi.m)
 
+
+### Deep First Search
+
+TODO 
+
+
+### Lambda NF
+
+[Implementation & Examples](scripts/LambdaNF.m)
