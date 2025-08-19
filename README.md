@@ -40,4 +40,9 @@ TODO
 
 ### Lambda NF
 
+Usage
+```shell
+./mira
+/f ../miranda-notes/scripts/LambdaNF.m
+```
 [Implementation & Examples](scripts/LambdaNF.m)
