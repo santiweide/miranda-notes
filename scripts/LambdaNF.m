@@ -4,11 +4,8 @@
 || Normal-order strategy; capture-avoiding substitution.
 || ===============================
 
-|| ---------- Names & Terms ----------
-
 name == [char]
 
-|| ---------- Utilities on names ----------
 remove_all :: * -> [*] -> [*]
 remove_all x []     = []
 remove_all x (y:ys) = remove_all x ys, if x=y
@@ -23,8 +20,6 @@ unionN xs []      = xs
 unionN xs (y:ys)  = unionN xs ys,      if elemN y xs
                   = unionN (y : xs) ys, otherwise
 
-
-|| ---------- Free variables ----------
 free :: term -> [name]
 free (Var x)     = [x]
 free (Lam x b)   = remove_all x (free b)
@@ -36,6 +31,7 @@ free (Mul a b)   = unionN (free a) (free b)
 free (Div a b)   = unionN (free a) (free b)
 
 
+|| An enumeration figuring types
 term ::= Var name | Lam name term
             | App term term | Num num
             | Add term term
@@ -48,6 +44,7 @@ maybe * ::= Nothing | Just *
 
 
 || ---------- Fresh-name generation ----------
+|| 生成一个不会与给定集合冲突的新变量名
 freshen :: name -> [name] -> name
 freshen x avoid = freshen (x ++ "'") avoid, if elemN x avoid
                 = x, otherwise
@@ -85,7 +82,7 @@ subst (Sub a b)   x s = Sub (subst a x s) (subst b x s)
 subst (Mul a b)   x s = Mul (subst a x s) (subst b x s)
 subst (Div a b)   x s = Div (subst a x s) (subst b x s)
 
-subst (Lam y b)   x s = Lam y b,                     if y = x
+subst (Lam y b)   x s = Lam y b,                 if y = x
                     = Lam y (subst b x s),       if ~elemN y (free s)
                     = Lam yy (subst bb x s),     otherwise
                             where
@@ -94,7 +91,7 @@ subst (Lam y b)   x s = Lam y b,                     if y = x
                                 bb    = rename_bound y yy b        || :: term
 
 
-|| ---------- One-step δ (arithmetic) helpers ----------
+|| ---------- One-step delta (arithmetic) helpers ----------
 
 deltaAdd (Num m) (Num n) = Just (Num (m + n))
 deltaAdd x y     = Nothing
@@ -118,7 +115,7 @@ fromJust (Just x) = x
 
 step :: term -> maybe term
 
-|| β-redex at the outermost application
+|| beta-redex at the outermost application
 step (App (Lam x b) a) = Just (subst b x a)
 
 || Applications: reduce left first; if stuck, reduce right
@@ -202,6 +199,7 @@ divide a b = Div a b
 ex1 = app (lam "x" (plus (v "x") (Num 1))) (Num 41)
 
 ex2 = app (lam "x" (lam "y" (app (v "x") (v "y")))) (v "y")
+|| nf ex2 
 
 tru = lam "t" (lam "f" (v "t"))
 fls = lam "t" (lam "f" (v "f"))
