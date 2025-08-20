@@ -122,16 +122,67 @@ isFourKind :: hand -> bool
 isFourKind h = or [ c = 4 | (x,c) <- rankCounts h ]
 
 fourKindScore :: hand -> [num]
-fourKindScore h = [3, rankVal quad, rankVal kick]
+fourKindScore h = [3, rankVal quad, rankVal single]
                     where
                         rc = rankCounts h
                         quad  = hd [ r | (r,c) <- rc; c = 4 ]
-                        kick  = hd [ r | (r,c) <- rc; c = 1 ]
+                        single  = hd [ r | (r,c) <- rc; c = 1 ]
 
 isFullHouse :: hand -> bool
 isFullHouse h = (or [ c = 3 | c <- cs ]) & (or [ c = 2 | c <- cs ])
                     where cs = [ c | (x,c) <- rankCounts h ]
 
+fullHouseScore :: hand -> [num]
+fullHouseScore h = [2, rankVal trip, rankVal pair]
+                    where rc = rankCounts h
+                        trip = hd [ r | (r,c) <- rc; c = 3 ]
+                        pair = hd [ r | (r,c) <- rc; c = 2 ]
+
 flushScore :: hand -> [num]
 flushScore h = 1 : [ rankVal (rOf c) | c <- insSort cmpRankDesc h ]
 
+
+score :: hand -> [num]
+score h = straightFlushScore h, if isStraight h & isFlush h 
+        = fourKindScore h, if isFourKind h 
+        = fullHouseScore h, if isFullHouse h
+        = flushScore h, if isFlush h
+        = [0,0,0], otherwise
+
+|| used to compare our [num] of score.
+gtLex :: [num] -> [num] -> bool
+gtLex []     []     = False
+gtLex (a:as) (b:bs) = (a>b)  \/ (a=b & gtLex as bs)
+
+eqListNum :: [num] -> [num] -> bool
+eqListNum []     []     = True
+eqListNum (a:as) (b:bs) = (a=b) & eqListNum as bs
+eqListNum x      x      = False
+
+indexScores :: [[num]] -> [(num,[num])]
+indexScores scs = pair scs 0
+                    where
+                    pair []     x = []
+                    pair (s:ss) i = (i,s) : pair ss (i+1)
+
+bestPair :: [(num,[num])] -> (num,[num])
+bestPair [p]        = p
+bestPair (p:q:rest) = bestPair (better p q : rest)
+                        where better (i1,s1) (i2,s2)
+                            = (i2,s2), if gtLex s2 s1
+                            = (i1,s1), otherwise
+
+
+winner4 :: [hand] -> num
+winner4 hs = error "winner4: need exactly 4 hands", if (#hs ~= 4)
+    = idx, if (cat > 0) & (ties = 1) || only care top1
+    = -1, otherwise
+        where
+            scores          = [ score h | h <- hs ] 
+            pairs        = indexScores scores
+            (idx, best)  = bestPair pairs 
+            ties         = # [ s | (x,s) <- pairs; eqListNum s best ] 
+            cat          = hd best || hd means head, get the head of the best
+
+
+example1 = winner4 []
