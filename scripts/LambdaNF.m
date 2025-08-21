@@ -68,10 +68,8 @@ rename_bound2 y yy d (Sub a b) = Sub (rename_bound2 y yy d a) (rename_bound2 y y
 rename_bound2 y yy d (Mul a b) = Mul (rename_bound2 y yy d a) (rename_bound2 y yy d b)
 rename_bound2 y yy d (Div a b) = Div (rename_bound2 y yy d a) (rename_bound2 y yy d b)
 
-
 || ---------- Capture-avoiding substitution ----------
 || subst body x s   ≡   body[x := s]
-
 subst :: term -> name -> term -> term
 subst (Var y)     x s = s,  if y = x
                       = Var y, otherwise
@@ -132,7 +130,7 @@ step (Lam x b) = Just (Lam x (fromJust sb)), if isJust sb
                     where
                         sb = step b
 
-|| δ for arithmetic nodes (outermost), otherwise push inside left-to-right
+|| delta for arithmetic nodes (outermost), otherwise push inside left-to-right
 step (Add a b) = dab, if isJust dab
     = Just (Add (fromJust sa) b), if isJust sa
     = Just (Add a (fromJust sb)), if isJust sb 

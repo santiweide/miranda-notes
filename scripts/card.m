@@ -185,4 +185,39 @@ winner4 hs = error "winner4: need exactly 4 hands", if (#hs ~= 4)
             cat          = hd best || hd means head, get the head of the best
 
 
-example1 = winner4 []
+||-------
+|| tests|
+|| ------
+sp = Spades; he = Hearts; di = Diamonds; cl = Clubs
+
+sf_spades :: hand
+sf_spades =
+  [ Card sp Ten, Card sp Jack, Card sp Queen, Card sp King, Card sp Ace ]
+
+sf_hearts =
+  [ Card he Ten, Card he Jack, Card he Queen, Card he King, Card he Ace ]
+
+fk_kings :: hand
+fk_kings =
+  [ Card sp King, Card he King, Card di King, Card cl King, Card sp Nine ]
+
+fh_7_over_2 :: hand
+fh_7_over_2 =
+  [ Card sp Seven, Card he Seven, Card di Seven, Card sp Two, Card he Two ]
+
+fl_spades :: hand
+fl_spades =
+  [ Card sp Ace, Card sp Ten, Card sp Seven, Card sp Five, Card sp Two ]
+
+hi_card :: hand
+hi_card =
+  [ Card sp Ace, Card he Nine, Card di Seven, Card cl Four, Card sp Three ]
+
+hands_a = [sf_spades, fk_kings, fh_7_over_2, fl_spades]
+t12_winner4_idx = winner4 hands_a 
+
+hands_b = [sf_spades, sf_hearts, fh_7_over_2, fl_spades]
+t13_winner4_suit = winner4 hands_b 
+
+hands_c = [hi_card, hi_card, hi_card, hi_card]
+t14_winner4_none = winner4 hands_c 
