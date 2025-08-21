@@ -60,7 +60,7 @@ suit ::= Spades | Hearts | Diamonds | Clubs
 rank ::= Two | Three | Four | Five | Six | Seven | Eight | Nine
             | Ten | Jack | Queen | King | Ace
 -- 这两种属性的笛卡尔积描述了Card，所以直接作为Card的属性就可以
-card ::= card suit rank
+card ::= Card suit rank
 
 deck == [card]
 deck52 :: deck
