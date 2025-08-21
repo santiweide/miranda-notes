@@ -144,6 +144,12 @@ shuffle :: num -> [*] -> (* -> * -> bool) -> [*]
 shuffle n xs eq = iterateN n (shuffle1 eq) xs
 ```
 
+虽然题目没有写，但是可以写一下eq的定义
+```haskell
+eq :: * -> * -> bool
+eq x y = True , if sOf x = sOf y & rOf x = rOf y
+  = False, otherwise
+```
 
 ### 4. Judge 判决胜负策略
 
@@ -346,3 +352,5 @@ TODO
 [斐波那契数列-optimized](scripts/fibs_streaming.m)
 
 [汉诺塔](scripts/hanoi.m)
+
+
